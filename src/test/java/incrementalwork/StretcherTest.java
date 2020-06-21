@@ -1,15 +1,11 @@
 package incrementalwork;
 
-
-import incrementalwork.Stretcher;
-import incrementalwork.Worker;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-
 
 public class StretcherTest {
 
@@ -23,12 +19,12 @@ public class StretcherTest {
   }
 
   @Test
-  public void testStretchToMaxWhenSomethingIsProcessed() {
+  public void testGoesToMinWhenSomethingIsProcessed() {
     given(worker.work()).willReturn(1);
 
     var waitMillis = stretcher.run();
 
-    assertThat(waitMillis, is(60_000L));
+    assertThat(waitMillis, is(1_000L));
   }
 
   @Test

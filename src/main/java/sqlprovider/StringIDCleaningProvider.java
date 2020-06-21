@@ -2,6 +2,8 @@ package sqlprovider;
 
 import incrementalwork.DataProviderForCleaning;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -30,7 +32,7 @@ public class StringIDCleaningProvider implements DataProviderForCleaning<String>
 
   @Override
   public String nextItemToClean() {
-    return fetchAndCacheNextId().get();
+    return fetchAndCacheNextId().orElseThrow();
   }
 
   @Override
@@ -51,21 +53,29 @@ public class StringIDCleaningProvider implements DataProviderForCleaning<String>
       statement.setString(1, id);
       statement.executeUpdate();
     } catch (SQLException ex) {
-      throw new RuntimeException(ex.getMessage(), ex);
+      throw new RuntimeException(ex.getMessage(), ex); //NOSONAR
     }
   }
 
   private Optional<String> forceSelectNextId() {
     try (var statement = connection.prepareStatement(selectNextId)) {
-      try (var result = statement.executeQuery()) {
-        if (!result.next())
-          return Optional.empty();
-
-        return Optional.ofNullable(result.getString(1));
-      }
+      return resultSetProcessor(statement);
     } catch (SQLException ex) {
-      throw new RuntimeException(ex.getMessage(), ex);
+      throw new RuntimeException(ex.getMessage(), ex); //NOSONAR
     }
+  }
+
+  private Optional<String> resultSetProcessor(final PreparedStatement statement) throws SQLException {
+    try (var result = statement.executeQuery()) {
+      return fetchSongleString(result);
+    }
+  }
+
+  Optional<String> fetchSongleString(final ResultSet result) throws SQLException {
+    if (!result.next())
+      return Optional.empty();
+
+    return Optional.ofNullable(result.getString(1));
   }
 
 }

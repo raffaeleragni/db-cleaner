@@ -1,8 +1,5 @@
 package incrementalwork;
 
-
-import incrementalwork.DataProviderForCleaning;
-import incrementalwork.Cleaner;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.BeforeEach;

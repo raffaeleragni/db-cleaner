@@ -30,7 +30,7 @@ public class Stretcher {
     if (worked > 0) {
       log(format("Deleted records: %d", worked));
       waitMillis = minWaitMillis;
-      return maxWaitMillis;
+      return minWaitMillis;
     }
 
     waitMillis *= scaleFactor;

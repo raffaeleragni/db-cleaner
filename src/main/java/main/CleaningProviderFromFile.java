@@ -1,3 +1,5 @@
+package main;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -11,7 +13,7 @@ public final class CleaningProviderFromFile {
   private CleaningProviderFromFile() {
   }
 
-  public static StringIDCleaningProvider build(String fileName) {
+  public static StringIDCleaningProvider build(String fileName) throws IOException, SQLException {
     var properties = new Properties();
     try (var reader = new FileReader(fileName)) {
       properties.load(reader);
@@ -25,8 +27,6 @@ public final class CleaningProviderFromFile {
       var deleteQuery = properties.getProperty("deleteWhereId");
 
       return new StringIDCleaningProvider(connection, selectQuery, deleteQuery);
-    } catch (IOException | SQLException ex) {
-      throw new RuntimeException(ex.getMessage(), ex);
     }
   }
 
